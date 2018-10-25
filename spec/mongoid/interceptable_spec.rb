@@ -520,6 +520,7 @@ describe Mongoid::Interceptable do
 
           before(:all) do
             Band.define_model_callbacks(:rearrange)
+            Record.define_model_callbacks(:rearrange)
             Band.set_callback(:validation, :before) do
               run_callbacks(:rearrange)
             end
@@ -529,6 +530,7 @@ describe Mongoid::Interceptable do
             # ActiveSupport may raise an error when trying to reset callbacks on all of Band's
             # descendants, regardless of whether they have a particular callback defined.
             begin; Band.reset_callbacks(:rearrange); rescue; end
+            begin; Record.reset_callbacks(:rearrange); rescue; end
           end
 
           let(:attributes) do
@@ -571,7 +573,7 @@ describe Mongoid::Interceptable do
         context "when saving the root" do
 
           it "only executes the callbacks once for each embed" do
-            expect(note).to receive(:update_saved).twice
+            expect(note).to receive(:update_saved).once
             band.save
           end
         end
@@ -937,6 +939,23 @@ describe Mongoid::Interceptable do
 
           it "does not execute the callback" do
             expect(record.before_create_called).to be false
+          end
+        end
+      end
+
+      describe "#after_create" do
+
+        context "when the child is new" do
+
+          context "when the parent is new" do
+
+            it "does not executes the callback" do
+              band = Band.new(name: "Moderat")
+              record = band.records.build(name: "Moderat")
+              band.save
+              expect(record.persisted_in_after_create).to be true
+            end
+
           end
         end
       end
