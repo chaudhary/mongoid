@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # encoding: utf-8
 require "mongoid/contextual/atomic"
 require "mongoid/contextual/aggregable/mongo"
@@ -300,6 +301,8 @@ module Mongoid
       #
       # @return [ GeoNear ] The GeoNear command.
       #
+      # @deprecated
+      #
       # @since 3.1.0
       def geo_near(coordinates)
         GeoNear.new(collection, criteria, coordinates)
@@ -341,7 +344,7 @@ module Mongoid
         @criteria, @klass, @cache = criteria, criteria.klass, criteria.options[:cache]
         @collection = @klass.collection
         criteria.send(:merge_type_selection)
-        @view = collection.find(criteria.selector, session: session)
+        @view = collection.find(criteria.selector, session: _session)
         apply_options
       end
 
@@ -708,8 +711,8 @@ module Mongoid
 
       private
 
-      def session
-        @criteria.send(:session)
+      def _session
+        @criteria.send(:_session)
       end
 
       def acknowledged_write?

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # encoding: utf-8
 module Mongoid
   module Association
@@ -189,8 +190,8 @@ module Mongoid
 
       private
 
-      def session
-        _base.send(:session)
+      def _session
+        _base.send(:_session)
       end
 
       # Find the first object given the supplied attributes or create/initialize it.

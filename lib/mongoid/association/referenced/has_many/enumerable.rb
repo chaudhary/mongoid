@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # encoding: utf-8
 module Mongoid
   module Association
@@ -211,6 +212,27 @@ module Mongoid
               else
                 _unloaded.count + _added.count == 0
               end
+            end
+
+            # Get an arbitrary document in the enumerable. Will check the persisted
+            # documents first. Does not load the entire enumerable.
+            #
+            # @example Get an arbitrary document.
+            #   enumerable.one
+            #
+            # @note Unlike #first, this does not automatically sort the result set.
+            #
+            # @param [ Hash ] opts The options for the query returning the first document.
+            #
+            # @option opts [ :none ] :id_sort Don't apply a sort on _id.
+            #
+            # @return [ Document ] The first document found.
+            #
+            # @since 7.1.0
+            def one(opts = {})
+              opts = opts.dup
+              opts[:id_sort] ||= :none
+              first(opts)
             end
 
             # Get the first document in the enumerable. Will check the persisted

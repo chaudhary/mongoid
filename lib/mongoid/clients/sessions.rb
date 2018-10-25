@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mongoid
   module Clients
 
@@ -53,7 +55,7 @@ module Mongoid
 
       private
 
-      def session
+      def _session
         Threaded.get_session
       end
 
@@ -104,7 +106,7 @@ module Mongoid
 
         private
 
-        def session
+        def _session
           Threaded.get_session
         end
       end

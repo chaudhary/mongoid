@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # encoding: utf-8
 module Mongoid
   module Contextual
@@ -165,8 +166,8 @@ module Mongoid
       def raw
         validate_out!
         cmd = command
-        opts = { read: cmd.delete(:read).options } if cmd[:read]
-        @map_reduce.database.command(cmd, (opts || {}).merge(session: session)).first
+        opts = { read: cmd.delete(:read) } if cmd[:read]
+        @map_reduce.database.command(cmd, (opts || {}).merge(session: _session)).first
       end
       alias :results :raw
 
@@ -250,8 +251,8 @@ module Mongoid
         raise Errors::NoMapReduceOutput.new({}) unless @map_reduce.out
       end
 
-      def session
-        criteria.send(:session)
+      def _session
+        criteria.send(:_session)
       end
     end
   end
